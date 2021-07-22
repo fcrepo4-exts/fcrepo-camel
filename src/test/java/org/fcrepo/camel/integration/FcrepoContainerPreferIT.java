@@ -25,11 +25,12 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.builder.xml.Namespaces;
 import org.apache.camel.component.mock.MockEndpoint;
+import org.apache.camel.support.builder.Namespaces;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.apache.jena.vocabulary.RDF;
 import org.fcrepo.camel.FcrepoHeaders;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -37,28 +38,29 @@ import org.junit.Test;
  * @author Aaron Coburn
  * @since Dec 26, 2014
  */
+@Ignore
 public class FcrepoContainerPreferIT extends CamelTestSupport {
 
     private static final String REPOSITORY = "http://fedora.info/definitions/v4/repository#";
 
     private static final String LDP = "http://www.w3.org/ns/ldp#";
 
-    @EndpointInject(uri = "mock:created")
+    @EndpointInject("mock:created")
     protected MockEndpoint createdEndpoint;
 
-    @EndpointInject(uri = "mock:filter")
+    @EndpointInject("mock:filter")
     protected MockEndpoint filteredEndpoint;
 
-    @EndpointInject(uri = "mock:container")
+    @EndpointInject("mock:container")
     protected MockEndpoint containerEndpoint;
 
-    @EndpointInject(uri = "mock:verifyGone")
+    @EndpointInject("mock:verifyGone")
     protected MockEndpoint goneEndpoint;
 
-    @EndpointInject(uri = "mock:deleted")
+    @EndpointInject("mock:deleted")
     protected MockEndpoint deletedEndpoint;
 
-    @Produce(uri = "direct:filter")
+    @Produce("direct:filter")
     protected ProducerTemplate template;
 
     @Test
@@ -149,74 +151,74 @@ public class FcrepoContainerPreferIT extends CamelTestSupport {
             @Override
             public void configure() {
 
-                final String fcrepo_uri = FcrepoTestUtils.getFcrepoEndpointUri();
+                final String fcrepoUri = FcrepoTestUtils.getFcrepoEndpointUri();
 
                 final Namespaces ns = new Namespaces("rdf", RDF.uri);
                 ns.add("fedora", REPOSITORY);
                 ns.add("ldp", LDP);
 
                 from("direct:create")
-                    .to(fcrepo_uri)
+                    .to(fcrepoUri)
                     .to("mock:created");
 
                 from("direct:preferHeadersCheckContainment")
-                    .to(fcrepo_uri)
+                    .to(fcrepoUri)
                     .filter().xpath(
                         "/rdf:RDF/rdf:Description/ldp:contains", ns)
                     .to("mock:filter");
 
                 from("direct:preferHeadersCheckServerManaged")
-                    .to(fcrepo_uri)
+                    .to(fcrepoUri)
                     .filter().xpath(
                         "/rdf:RDF/rdf:Description/fedora:created", ns)
                     .to("mock:filter");
 
                 from("direct:includeServerManaged")
-                    .to(fcrepo_uri + "&preferInclude=ServerManaged")
+                    .to(fcrepoUri + "&preferInclude=ServerManaged")
                     .filter().xpath(
                         "/rdf:RDF/rdf:Description/fedora:created", ns)
                     .to("mock:filter")
-                    .to(fcrepo_uri)
+                    .to(fcrepoUri)
                     .to("mock:container");
 
                 from("direct:includeContainmentOmitManaged")
-                    .to(fcrepo_uri + "&preferOmit=ServerManaged&preferInclude=PreferContainment")
+                    .to(fcrepoUri + "&preferOmit=ServerManaged&preferInclude=PreferContainment")
                     .filter().xpath(
                         "/rdf:RDF/rdf:Description/ldp:contains", ns)
                     .to("mock:filter");
 
                 from("direct:omitServerManaged")
-                    .to(fcrepo_uri + "&preferOmit=ServerManaged")
+                    .to(fcrepoUri + "&preferOmit=ServerManaged")
                     .filter().xpath(
                         "/rdf:RDF/rdf:Description/fedora:created", ns)
                     .to("mock:filter")
-                    .to(fcrepo_uri)
+                    .to(fcrepoUri)
                     .to("mock:container");
 
                 from("direct:includeContainment")
-                    .to(fcrepo_uri + "&preferInclude=PreferContainment")
+                    .to(fcrepoUri + "&preferInclude=PreferContainment")
                     .filter().xpath(
                             "/rdf:RDF/rdf:Description/ldp:contains", ns)
                     .to("mock:filter");
 
                 from("direct:omitContainmentShort")
-                    .to(fcrepo_uri + "&preferOmit=PreferContainment")
+                    .to(fcrepoUri + "&preferOmit=PreferContainment")
                     .filter().xpath(
                             "/rdf:RDF/rdf:Description/ldp:contains", ns)
                     .to("mock:filter");
 
                 from("direct:omitContainmentFull")
-                    .to(fcrepo_uri + "&preferOmit=PreferContainment")
+                    .to(fcrepoUri + "&preferOmit=PreferContainment")
                     .filter().xpath(
                             "/rdf:RDF/rdf:Description/ldp:contains", ns)
                     .to("mock:filter");
 
                 from("direct:delete")
                     .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
-                    .to(fcrepo_uri)
+                    .to(fcrepoUri)
                     .to("mock:deleted")
                     .setHeader(Exchange.HTTP_METHOD, constant("GET"))
-                    .to(fcrepo_uri + "&throwExceptionOnFailure=false")
+                    .to(fcrepoUri + "&throwExceptionOnFailure=false")
                     .to("mock:verifyGone");
             }
         };

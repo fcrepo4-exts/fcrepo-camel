@@ -18,6 +18,7 @@
 package org.fcrepo.camel;
 
 import static java.lang.Boolean.FALSE;
+import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableMap;
@@ -48,8 +49,8 @@ import java.util.function.Function;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.converter.stream.CachedOutputStream;
-import org.apache.camel.impl.DefaultProducer;
-import org.apache.camel.util.ExchangeHelper;
+import org.apache.camel.support.DefaultProducer;
+import org.apache.camel.support.ExchangeHelper;
 import org.apache.camel.util.IOHelper;
 import org.fcrepo.client.FcrepoClient;
 import org.fcrepo.client.FcrepoOperationFailedException;
@@ -197,7 +198,9 @@ public class FcrepoProducer extends DefaultProducer {
             if (!preferHeader.isEmpty()) {
                 final FcrepoPrefer prefer = new FcrepoPrefer(preferHeader);
                 if (prefer.isMinimal()) {
-                    response = get.preferMinimal().perform();
+                    response = get.preferRepresentation(
+                            asList(URI.create("http://www.w3.org/ns/ldp#PreferMinimalContainer")),
+                            asList(URI.create("http://fedora.info/definitions/fcrepo#ServerManaged"))).perform();
                 } else if (prefer.isRepresentation()) {
                     response = get.preferRepresentation(prefer.getInclude(), prefer.getOmit()).perform();
                 } else {

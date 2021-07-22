@@ -17,3 +17,5 @@ velocity.log
 .project
 .settings/
 /examples/*/target/
+*.iml
+.idea/

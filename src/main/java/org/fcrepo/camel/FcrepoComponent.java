@@ -23,7 +23,7 @@ import java.util.Map;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
-import org.apache.camel.impl.UriEndpointComponent;
+import org.apache.camel.support.DefaultComponent;
 import org.slf4j.Logger;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -32,7 +32,7 @@ import org.springframework.transaction.PlatformTransactionManager;
  * @author Aaron Coburn
  * @since October 20, 2014
  */
-public class FcrepoComponent extends UriEndpointComponent {
+public class FcrepoComponent extends DefaultComponent {
 
     private FcrepoConfiguration configuration;
 
@@ -44,7 +44,6 @@ public class FcrepoComponent extends UriEndpointComponent {
      * Create a FcrepoComponent independent of a CamelContext.
      */
     public FcrepoComponent() {
-        super(FcrepoEndpoint.class);
     }
 
     /**
@@ -52,7 +51,7 @@ public class FcrepoComponent extends UriEndpointComponent {
      * @param context the camel context for the component.
      */
     public FcrepoComponent(final CamelContext context) {
-        super(context, FcrepoEndpoint.class);
+        super(context);
     }
 
     /**
@@ -60,7 +59,6 @@ public class FcrepoComponent extends UriEndpointComponent {
      * @param config the component-wide configuration.
      */
     public FcrepoComponent(final FcrepoConfiguration config) {
-        super(FcrepoEndpoint.class);
         this.configuration = config;
     }
 

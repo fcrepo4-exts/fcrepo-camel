@@ -20,7 +20,7 @@ package org.fcrepo.camel.processor;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
-import static org.apache.camel.util.ExchangeHelper.getMandatoryHeader;
+import static org.apache.camel.support.ExchangeHelper.getMandatoryHeader;
 import static org.apache.jena.util.URIref.encode;
 import static org.fcrepo.camel.FcrepoHeaders.FCREPO_BASE_URL;
 import static org.fcrepo.camel.FcrepoHeaders.FCREPO_IDENTIFIER;

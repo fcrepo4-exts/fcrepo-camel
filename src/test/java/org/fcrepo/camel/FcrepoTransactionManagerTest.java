@@ -74,7 +74,6 @@ public class FcrepoTransactionManagerTest {
         when(mockClient.head(any(URI.class))).thenReturn(mockHeadBuilder);
         when(mockClient.get(any(URI.class))).thenReturn(mockGetBuilder);
         when(mockGetBuilder.accept(any(String.class))).thenReturn(mockGetBuilder);
-        when(mockGetBuilder.preferMinimal()).thenReturn(mockGetBuilder);
         when(mockGetBuilder.preferRepresentation(any(List.class), any(List.class))).thenReturn(mockGetBuilder);
         when(mockClient.post(any(URI.class))).thenReturn(mockPostBuilder);
         when(mockPostBuilder.body(any(InputStream.class), any(String.class))).thenReturn(mockPostBuilder);

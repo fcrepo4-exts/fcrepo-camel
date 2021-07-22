@@ -17,21 +17,21 @@
  */
 package org.fcrepo.camel.integration;
 
-import static org.fcrepo.camel.FcrepoHeaders.FCREPO_URI;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Exchange;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.builder.xml.Namespaces;
 import org.apache.camel.component.mock.MockEndpoint;
+import org.apache.camel.support.builder.Namespaces;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.apache.jena.vocabulary.RDF;
 import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.fcrepo.camel.FcrepoHeaders.FCREPO_URI;
 
 /**
  * Test adding a non-RDF resource
@@ -87,7 +87,7 @@ public class FcrepoBinaryGetIT extends CamelTestSupport {
         goneEndpoint.expectedMessageCount(2);
         goneEndpoint.expectedHeaderReceived(Exchange.HTTP_RESPONSE_CODE, 410);
 
-        fixityEndpoint.expectedMessageCount(3);
+        fixityEndpoint.expectedMessageCount(1);
         fixityEndpoint.expectedHeaderReceived(Exchange.HTTP_RESPONSE_CODE, 200);
 
         final String binary = "/file";
